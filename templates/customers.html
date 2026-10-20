@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}
+{% block heading %}Customers{% endblock %}
+{% block subheading %}Search and browse every customer in the database{% endblock %}
+
+{% block content %}
+
+<section class="card">
+  <form class="toolbar" id="customer-toolbar" onsubmit="return false;">
+    <div class="search-box">
+      <input type="search" id="search-input" placeholder="Search by customer ID, gender, contract, internet or payment&hellip;" autocomplete="off">
+    </div>
+    <select id="churn-filter" aria-label="Filter by churn status">
+      <option value="">All customers</option>
+      <option value="Yes">Churned only</option>
+      <option value="No">Retained only</option>
+    </select>
+    <select id="per-page" aria-label="Rows per page">
+      <option value="20">20 / page</option>
+      <option value="50">50 / page</option>
+      <option value="100">100 / page</option>
+    </select>
+  </form>
+
+  <div id="customer-error" class="alert alert-error" hidden></div>
+
+  <div class="table-wrap">
+    <table class="table" id="customer-table">
+      <thead>
+        <tr>
+          {% set columns = [
+            ('customer_id', 'Customer ID'),
+            ('gender', 'Gender'),
+            ('tenure', 'Tenure'),
+            ('contract', 'Contract'),
+            ('internet_service', 'Internet'),
+            ('payment_method', 'Payment'),
+            ('monthly_charges', 'Monthly'),
+            ('total_charges', 'Total'),
+            ('churn', 'Status')
+          ] %}
+          {% for key, label in columns %}
+          <th data-sort="{{ key }}" class="sortable {{ 'asc' if key == 'customer_id' }}">
+            {{ label }} <span class="sort-caret"></span>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody id="customer-body">
+        {% for i in range(8) %}
+        <tr class="skeleton-row"><td colspan="9"></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager">
+    <span class="muted" id="result-count">&mdash;</span>
+    <div class="pager-controls">
+      <button class="btn btn-ghost" id="prev-page">&larr; Previous</button>
+      <span id="page-label" class="muted">Page 1</span>
+      <button class="btn btn-ghost" id="next-page">Next &rarr;</button>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/customers.js') }}"></script>
+{% endblock %}

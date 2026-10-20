@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block subheading %}Live churn overview from 7,032 customer records{% endblock %}
+
+{% block content %}
+
+<section class="kpi-grid" id="kpi-grid">
+  {% for i in range(4) %}
+  <div class="card kpi skeleton-card"></div>
+  {% endfor %}
+</section>
+
+<div id="dashboard-error" class="alert alert-error" hidden></div>
+
+<div class="grid-2">
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Churn rate by contract type</h2>
+      <p class="muted">Month-to-month customers churn most</p>
+    </div>
+    <div class="chart" id="chart-contract"></div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Churn by internet service</h2>
+      <p class="muted">Fiber optic carries the highest risk</p>
+    </div>
+    <div class="chart" id="chart-internet"></div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Churn rate by payment method</h2>
+      <p class="muted">Electronic check is the strongest signal</p>
+    </div>
+    <div class="chart" id="chart-payment"></div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Customer distribution by tenure</h2>
+      <p class="muted">Churn concentrates in the first year</p>
+    </div>
+    <div class="chart" id="chart-tenure"></div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Churn rate by monthly charges</h2>
+      <p class="muted">Higher bills correlate with higher churn</p>
+    </div>
+    <div class="chart" id="chart-charges"></div>
+  </section>
+
+  <section class="card chart-card">
+    <div class="card-head">
+      <h2>Churn by technical support</h2>
+      <p class="muted">Support reduces churn</p>
+    </div>
+    <div class="chart" id="chart-support"></div>
+  </section>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

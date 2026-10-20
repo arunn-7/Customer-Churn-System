@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ChurnIQ{% endblock %} &middot; Customer Churn Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body>
+  <div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-mark">CI</span>
+        <div>
+          <strong>ChurnIQ</strong>
+          <small>Churn Prediction</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('home') }}" class="nav-link {{ 'active' if active_page == 'dashboard' }}">
+            <span class="nav-icon">&#9632;</span> Dashboard
+          </a>
+          {% if current_user.can_view_demo_data %}
+            <a href="{{ url_for('predict_page') }}" class="nav-link {{ 'active' if active_page == 'predict' }}">
+              <span class="nav-icon">&#10003;</span> Predict Churn
+            </a>
+            <a href="{{ url_for('customers_page') }}" class="nav-link {{ 'active' if active_page == 'customers' }}">
+              <span class="nav-icon">&#128101;</span> Customers
+            </a>
+          {% else %}
+            <span class="nav-link nav-disabled" title="Not available to Viewer accounts">
+              <span class="nav-icon">&#10003;</span> Sample Demo
+              <span class="nav-lock">locked</span>
+            </span>
+          {% endif %}
+        {% endif %}
+      </nav>
+
+      {% if current_user.is_authenticated %}
+        <div class="user-panel">
+          <div class="user-meta">
+            <strong>{{ current_user.full_name }}</strong>
+            <span class="user-role">{{ current_user.role }}</span>
+            {% if current_user.company %}
+              <span class="user-company">{{ current_user.company.name }}</span>
+            {% endif %}
+          </div>
+          <form method="post" action="{{ url_for('auth.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-ghost btn-sm">Sign out</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="user-panel">
+          <a class="btn btn-ghost btn-sm" href="{{ url_for('auth.login') }}">Sign in</a>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register_company_view') }}">Register</a>
+        </div>
+      {% endif %}
+
+      <div class="sidebar-foot">
+        <span class="dot dot-ok" id="health-dot"></span>
+        <span id="health-text">Checking service&hellip;</span>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <div>
+          <h1 class="page-title">{% block heading %}{% endblock %}</h1>
+          <p class="page-sub">{% block subheading %}{% endblock %}</p>
+        </div>
+      </header>
+
+      <main class="content">
+        {#
+          The dashboard, customer directory and prediction pages all read the
+          IBM sample dataset, so the banner is shown whenever demo data is on
+          screen. Company-scoped pages (/api/company/*) must never show it.
+        #}
+        {% if active_page in ('dashboard', 'customers', 'predict') and current_user.is_authenticated and current_user.can_view_demo_data %}
+          <div class="demo-banner" role="status">
+            <strong>IBM Sample Data &mdash; Demo Mode</strong>
+            <span>
+              These figures describe the bundled public Telco sample dataset,
+              not {{ current_user.company.name if current_user.company else 'your company' }}.
+              Upload your own customers to see company-specific results.
+            </span>
+          </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="foot">
+        <span>ChurnIQ &middot; Gradient Boosting classifier &middot; {{ 'now' }}</span>
+      </footer>
+    </div>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

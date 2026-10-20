@@ -17,6 +17,9 @@ __pycache__/
 # Logs
 *.log
 
+# Database backups (never commit; may contain production data)
+backups/
+
 # OS Files
 .DS_Store
 Thumbs.db

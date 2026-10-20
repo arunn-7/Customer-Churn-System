@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Access denied{% endblock %}
+{% block heading %}Access denied{% endblock %}
+{% block subheading %}You do not have permission to view this page{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <section class="card error-card">
+    <div class="error-code">{{ code }}</div>
+    <h1>{{ message }}</h1>
+    <p class="muted">
+      {% if current_user.is_authenticated %}
+        You are signed in as <strong>{{ current_user.email }}</strong>
+        ({{ current_user.role }}). Ask an administrator if you believe this is a mistake.
+      {% else %}
+        You need to sign in to continue.
+      {% endif %}
+    </p>
+    <div class="form-actions" style="justify-content:center">
+      <a class="btn btn-primary" href="{{ url_for('home') }}">Back to dashboard</a>
+      {% if not current_user.is_authenticated %}
+        <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Sign in</a>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

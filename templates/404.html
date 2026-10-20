@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Not Found &middot; ChurnIQ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="centered-page">
+  <div class="card error-card">
+    <div class="error-code">404</div>
+    <h1>Page not found</h1>
+    <p>The page you were looking for does not exist or has been moved.</p>
+    <a class="btn btn-primary" href="{{ url_for('home') }}">Back to dashboard</a>
+  </div>
+</body>
+</html>

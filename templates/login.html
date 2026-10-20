@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block heading %}Sign in{% endblock %}
+{% block subheading %}Access your company's churn workspace{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <section class="card auth-card">
+    {% if error %}
+      <div class="alert alert-error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'error' if category == 'error' else 'success' }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('auth.login') }}{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" value="{{ form.email or '' }}"
+               autocomplete="email" required autofocus>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+
+    <p class="auth-alt">
+      No company account yet? <a href="{{ url_for('auth.register_company_view') }}">Register a company</a>
+    </p>
+  </section>
+</div>
+{% endblock %}

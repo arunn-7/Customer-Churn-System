@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Predict Churn{% endblock %}
+{% block heading %}Predict Churn{% endblock %}
+{% block subheading %}Score a customer against the trained Gradient Boosting model{% endblock %}
+
+{% block content %}
+<div class="grid-split">
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Customer details</h2>
+      <p class="muted">Fields marked with <span class="req">*</span> are required</p>
+    </div>
+
+    <form id="predict-form" novalidate>
+      <div id="form-groups"></div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-btn">
+          <span class="btn-label">Predict churn risk</span>
+          <span class="spinner" hidden></span>
+        </button>
+        <button type="button" class="btn btn-ghost" id="reset-btn">Reset</button>
+      </div>
+    </form>
+  </section>
+
+  <aside class="results-column">
+    <div id="result-empty" class="card placeholder-card">
+      <div class="placeholder-icon">&#128269;</div>
+      <h3>No prediction yet</h3>
+      <p>Fill in the customer details and run the model to see churn risk and the factors driving it.</p>
+    </div>
+
+    <div id="result-error" class="alert alert-error" hidden></div>
+
+    <div id="result-loading" class="card placeholder-card" hidden>
+      <div class="spinner spinner-lg"></div>
+      <h3>Scoring customer&hellip;</h3>
+      <p>The model is evaluating 30 features.</p>
+    </div>
+
+    <div id="result-card" hidden>
+      <section class="card result-hero" id="result-hero">
+        <div class="result-head">
+          <div>
+            <span class="badge" id="risk-badge">Risk</span>
+            <h2 id="result-verdict">&mdash;</h2>
+          </div>
+          <div class="gauge" id="result-gauge"></div>
+        </div>
+        <p class="result-action" id="result-action"></p>
+        <div class="result-meta">
+          <div><span>Churn probability</span><strong id="result-prob">&mdash;</strong></div>
+          <div><span>Predicted label</span><strong id="result-label">&mdash;</strong></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Why this prediction</h2>
+          <p class="muted">Each factor is scored by re-running the model with that field changed to its baseline</p>
+        </div>
+        <ul class="factors" id="factor-list"></ul>
+      </section>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/predict.js') }}"></script>
+{% endblock %}
